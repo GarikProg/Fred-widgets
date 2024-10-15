@@ -1,0 +1,16 @@
+.Layout {
+    padding: 16px;
+}
+
+.Header {
+    background-color: transparent;
+}
+
+.Title {
+    margin-top: 0;
+    text-align: center;
+}
+
+.LayoutContent {
+    padding: 8px;
+}
