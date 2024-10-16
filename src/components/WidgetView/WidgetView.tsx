@@ -1,12 +1,13 @@
 import { FC, memo, useCallback } from 'react';
 import { FredChartWidget } from '../../types';
-import { Button, Card, Flex, Popconfirm, Space, Spin } from 'antd';
+import { Button, Card, Flex, Popconfirm, Space, Typography } from 'antd';
 import { Chart } from '../Chart/Chart';
 import { useFredQuery } from '../../hooks/useFredQuery';
 
 import classes from './WidgetView.module.css';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { LABELS } from '../../consts';
+import ErrorData from '../ErrorData/ErrorData';
 
 type Props = {
   widget: FredChartWidget;
@@ -25,8 +26,6 @@ const WidgetView: FC<Props> = ({ widget, onConfig, onDelete }) => {
   });
 
   const handleConfig = useCallback(() => {
-    console.log(widget);
-
     onConfig(widget);
   }, [widget]);
 
@@ -39,7 +38,7 @@ const WidgetView: FC<Props> = ({ widget, onConfig, onDelete }) => {
       className={classes.Widget}
       title={
         <Flex align="center" justify="space-between">
-          <p>{title}</p>
+          <Typography.Text>{title}</Typography.Text>
           <Space>
             <Button
               icon={<EditOutlined />}
@@ -53,16 +52,16 @@ const WidgetView: FC<Props> = ({ widget, onConfig, onDelete }) => {
           </Space>
         </Flex>
       }
+      loading={isLoading}
     >
-      {isLoading && <Spin />}
-
-      {error ? (
-        <Space>
-          <p>{LABELS.DEFAULT_ERROR}</p>
-        </Space>
-      ) : null}
-
-      {data && <Chart data={data.observations} color={widget.yAxisLabel} />}
+      {error && <ErrorData error={error} />}
+      {data && (
+        <Chart
+          data={data.observations}
+          color={widget.chartColor}
+          yAxisLabel={widget.yAxisLabel}
+        />
+      )}
     </Card>
   );
 };

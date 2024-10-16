@@ -37,11 +37,11 @@ export type FredObservationsResponse = {
   realtime_end: string;
   observation_start: string;
   observation_end: string;
-  units: string; // ENUM
-  output_type: number; // ENUM
-  file_type: string; // ENUM
-  order_by: string; // ENUM
-  sort_order: string; // ENUM
+  units: string;
+  output_type: number;
+  file_type: string;
+  order_by: string;
+  sort_order: string;
   count: number;
   offset: number;
   limit: number;
@@ -51,8 +51,8 @@ export type FredObservationsResponse = {
 export type FredSeriesResponse = {
   realtime_start: string;
   realtime_end: string;
-  order_by: string; // ENUM
-  sort_order: string; // ENUM
+  order_by: string;
+  sort_order: string;
   count: number;
   offset: number;
   limit: number;
@@ -77,3 +77,8 @@ export enum DataFrequency {
   bwew = 'bwew',
   bwem = 'bwem',
 }
+
+export type ApiError = {
+  error_code?: number;
+  error_message?: string;
+};

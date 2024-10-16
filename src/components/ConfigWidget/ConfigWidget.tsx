@@ -2,10 +2,11 @@ import { FC, useCallback, useEffect } from 'react';
 import { FredChartWidget, FredChartWidgetFormValue } from '../../types';
 import { useForm } from 'antd/es/form/Form';
 import { ColorPicker, DatePicker, Form, Input, Modal, Select } from 'antd';
-import { DataFrequencyOptions, LABELS } from '../../consts';
+import { DataFrequencyOptions, DATE_FORMAT, LABELS } from '../../consts';
 import DebouncedSelect from '../DebounceSelect/DebounceSelect';
 import dayjs from 'dayjs';
-import { AggregationColor } from 'antd/es/color-picker/color';
+import type { AggregationColor } from 'antd/es/color-picker/color';
+import type { DefaultOptionType } from 'antd/es/select';
 
 type Props = {
   widgetConfig?: FredChartWidget;
@@ -38,13 +39,14 @@ export const ConfigWidget: FC<Props> = ({
     const formValue = form.getFieldsValue();
     onConfig({
       ...formValue,
-      realtimeEnd: formValue.realtimeEnd?.format('YYYY-MM-DD'),
-      realtimeStart: formValue.realtimeStart?.format('YYYY-MM-DD'),
+      realtimeEnd: formValue.realtimeEnd?.format(DATE_FORMAT),
+      realtimeStart: formValue.realtimeStart?.format(DATE_FORMAT),
     });
+    form.resetFields();
   }, []);
 
-  const handleColorChange = (_: AggregationColor, css: string) => {
-    form.setFieldValue('chartColor', css);
+  const handleColorChange = (color: AggregationColor) => {
+    form.setFieldValue('chartColor', color.toHexString());
   };
 
   return (
@@ -56,29 +58,30 @@ export const ConfigWidget: FC<Props> = ({
     >
       <Form<FredChartWidgetFormValue> form={form}>
         <Form.Item name="id" noStyle />
-        <Form.Item name="title" label="Widget title">
+        <Form.Item name="seriesLabel" noStyle />
+        <Form.Item name="title" label={LABELS.WIDGET_TITLE}>
           <Input />
         </Form.Item>
-        <Form.Item name="seriesId" label="Chart series">
+        <Form.Item name="seriesId" label={LABELS.CHART_SERIES}>
           <DebouncedSelect value={widgetConfig?.seriesId} />
         </Form.Item>
-        <Form.Item name="chartColor" label="Chart color">
+        <Form.Item name="chartColor" label={LABELS.CHART_COLOR}>
           <ColorPicker
             value={widgetConfig?.chartColor}
             showText
             onChange={handleColorChange}
           />
         </Form.Item>
-        <Form.Item name="yAxisLabel" label="Y axis label">
+        <Form.Item name="yAxisLabel" label={LABELS.Y_AXIS_LABEL}>
           <Input />
         </Form.Item>
-        <Form.Item name="realtimeStart" label="Real time start">
+        <Form.Item name="realtimeStart" label={LABELS.REALTIME_START}>
           <DatePicker />
         </Form.Item>
-        <Form.Item name="realtimeEnd" label="Real time end">
+        <Form.Item name="realtimeEnd" label={LABELS.REALTIME_END}>
           <DatePicker />
         </Form.Item>
-        <Form.Item name="frequency" label="Series frequency">
+        <Form.Item name="frequency" label={LABELS.SERIES_FREQUENCY}>
           <Select options={DataFrequencyOptions} />
         </Form.Item>
       </Form>

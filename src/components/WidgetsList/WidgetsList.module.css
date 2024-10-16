@@ -1,0 +1,7 @@
+.AddButton {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+    position: sticky;
+    bottom: 16px;
+}

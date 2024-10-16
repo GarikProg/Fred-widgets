@@ -14,7 +14,7 @@ const MainPage: FC = () => {
         </Typography.Title>
       </Layout.Header>
 
-      <Layout.Content>
+      <Layout.Content className={classes.LayoutContent}>
         <WidgetsList />
       </Layout.Content>
     </Layout>

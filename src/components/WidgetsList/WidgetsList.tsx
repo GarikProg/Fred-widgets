@@ -1,26 +1,26 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { FredChartWidget } from '../../types';
-import { Button, Flex } from 'antd';
+import { Button, Empty, Flex, Space, Typography } from 'antd';
 import WidgetView from '../WidgetView/WidgetView';
 import { ConfigWidget } from '../ConfigWidget/ConfigWidget';
 import { PlusCircleOutlined } from '@ant-design/icons';
 
 import { v4 as uuidv4 } from 'uuid';
+import { LABELS } from '../../consts';
 
-const DEFAULT_WIDGET: FredChartWidget = {
-  id: 'sdfsdfsd',
-  seriesLabel: 'Inflation',
-  title: 'Тест',
-  seriesId: 'GNPCA',
-  realtimeStart: '1776-07-04',
-  realtimeEnd: '9999-12-31',
-};
+import classes from './WidgetsList.module.css';
 
 export const WidgetsList: FC = () => {
-  const [list, setList] = useState<FredChartWidget[]>([DEFAULT_WIDGET]);
+  const [list, setList] = useState<FredChartWidget[]>(
+    JSON.parse(localStorage.getItem('fred_widgets') || '[]'),
+  );
 
   const [currentWidget, setCurrentWidget] = useState<FredChartWidget>();
   const [configModalOpen, setConfigModalOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    localStorage.setItem('fred_widgets', JSON.stringify(list));
+  }, [list]);
 
   const handleConfig = (widget: FredChartWidget) => {
     if (widget?.id) {
@@ -55,18 +55,43 @@ export const WidgetsList: FC = () => {
 
   return (
     <>
-      <Flex gap={16} wrap>
-        {list.map((widget) => (
-          <WidgetView
-            widget={widget}
-            key={widget.id}
-            onConfig={onConfig}
-            onDelete={handleDelete}
-          />
-        ))}
+      {list.length === 0 ? (
+        <Empty
+          description={<Typography.Text>{LABELS.NO_WIDGETS}</Typography.Text>}
+        >
+          <Button
+            type="primary"
+            icon={<PlusCircleOutlined />}
+            onClick={handleAdd}
+          >
+            {LABELS.ADD}
+          </Button>
+        </Empty>
+      ) : (
+        <>
+          <Flex gap={16} wrap justify="center">
+            {list.map((widget) => (
+              <WidgetView
+                widget={widget}
+                key={widget.id}
+                onConfig={onConfig}
+                onDelete={handleDelete}
+              />
+            ))}
+          </Flex>
+          <div className={classes.AddButton}>
+            <Button
+              icon={<PlusCircleOutlined />}
+              onClick={handleAdd}
+              size="large"
+              type="primary"
+            >
+              {LABELS.ADD}
+            </Button>
+          </div>
+        </>
+      )}
 
-        <Button icon={<PlusCircleOutlined />} onClick={handleAdd} />
-      </Flex>
       <ConfigWidget
         widgetConfig={currentWidget}
         onConfig={handleConfig}

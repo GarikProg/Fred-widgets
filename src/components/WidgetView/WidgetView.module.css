@@ -1,4 +1,5 @@
 .Widget {
     height: 400px;
-    width: 640px;
+    width: 100%;
+    max-width: 700px;
 }

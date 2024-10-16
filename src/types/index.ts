@@ -17,7 +17,6 @@ export type FredChartWidget = Widget &
   FredRequestParams & {
     chartColor?: string;
     yAxisLabel?: string;
-    seriesLabel?: string;
   };
 
 export type FredChartWidgetFormValue = Omit<

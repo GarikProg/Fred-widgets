@@ -12,19 +12,32 @@ type Props = {
 export const Chart: FC<Props> = ({ data, yAxisLabel, color }) => {
   const options = useMemo(
     () => ({
-      grid: { top: 8, right: 8, bottom: 24, left: 8 },
+      grid: { top: 32, right: 8, bottom: 24, left: 48 },
       xAxis: {
         type: 'category',
         data: data.map(({ date }) => date),
       },
+      toolbox: {
+        show: true,
+        feature: {
+          magicType: { type: ['line', 'bar'] },
+        },
+      },
       yAxis: {
         type: 'value',
-        label: yAxisLabel,
+        name: yAxisLabel,
+        nameGap: 20,
+        nameTextStyle: {
+          align: 'start',
+        },
       },
       series: [
         {
           data: data.map(({ value }) => value),
           type: 'line',
+          itemStyle: {
+            color,
+          },
           lineStyle: {
             color,
           },
